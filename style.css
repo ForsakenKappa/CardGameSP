@@ -53,7 +53,7 @@
   /* Blue / 100 */
   background: none;
 }
-.difficulty__hard, .difficulty__normal, .difficulty__easy {
+.difficulty__button {
   width: 96px;
   height: 98px;
   color: #0080C1;
