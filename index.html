@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <script src="./src/script.js"></script>
     <title>Card Game</title>
 </head>
 <body>
@@ -12,9 +13,9 @@
         <div class="difficulty">
             <h1 class="difficulty__header">Выберите сложность</h1>
             <ul class="difficulty__settings">
-                <li class="difficulty__option"><button class="difficulty__easy button">1</button></li>
-                <li class="difficulty__option"><button class="difficulty__normal button">2</button></li>
-                <li class="difficulty__option"><button class="difficulty__hard button">3</button></li>
+                <li class="difficulty__option"><button class="difficulty__button button" data-difficulty="1">1</button></li>
+                <li class="difficulty__option"><button class="difficulty__button button" data-difficulty="2">2</button></li>
+                <li class="difficulty__option"><button class="difficulty__button button" data-difficulty="3">3</button></li>
             </ul>
             <button class="difficulty__submit button">Старт</button>
         </div>
