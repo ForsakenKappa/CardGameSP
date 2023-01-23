@@ -1,6 +1,12 @@
+$suit-heart: url("../../img/heart.svg");
+$suit-pike: url("../../img/pike.svg");
+$suit-clover: url("../../img/clover.svg");
+$suit-tile: url("../../img/tile.svg");
+$current-suit: var(--current-suit);
+
 @font-face {
     font-family: StratosSkyeng;
-    src: url("./fonts/Web fonts/stratosskyengweb-medium.woff");
+    src: url("../../fonts/Web fonts/stratosskyengweb-medium.woff");
 }
 
 * {
@@ -66,30 +72,228 @@
         font-size: 64px;
         line-height: 72px;
     }
+}
 
-    &__submit {
-        width: 246px;
-        height: 50px;
-        font-family: StratosSkyeng, sans-serif;
-        font-weight: 400;
-        font-size: 24px;
-        line-height: 32px;
-        color: #fff;
-        background: #7ac100;
+.card {
+    /* Fallback */
+    $current-suit: $suit-pike;
+
+    width: 95px;
+    height: 133px;
+    border-radius: 4px;
+    background-color: #fff;
+    position: relative;
+
+    .rank {
+        height: inherit;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        &__text {
+            margin: 6px;
+            font-family: StratosSkyeng, sans-serif;
+            font-size: 24px;
+            line-height: 20px;
+            color: #000;
+            font-feature-settings: "pnum" on, "lnum" on;
+
+            &_lower-text {
+                transform: rotate(180deg);
+            }
+        }
     }
 
-    .button {
-        border-radius: 12px;
-        border: none;
-        cursor: pointer;
-        transition: transform 100ms;
-
-        &:hover {
-            transform: scale(1.05);
+    .suit {
+        &__upper-left,
+        &__center,
+        &__lower-right {
+            position: absolute;
+            background-image: $current-suit;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
         }
 
-        &:active {
-            transform: scale(0.95);
+        &__upper-left,
+        &__lower-right {
+            width: 6px;
+            height: 6px;
+        }
+
+        &__upper-left {
+            left: 9px;
+            top: 27px;
+        }
+
+        &__lower-right {
+            transform: rotate(180deg);
+            right: 9px;
+            bottom: 27px;
+        }
+
+        &__center {
+            width: 29px;
+            height: 25px;
+            left: 29px;
+            top: 46px;
         }
     }
+
+    &_disclosed {
+        background-color: #e4fbff;
+
+        &::before {
+            position: absolute;
+            top: 11px;
+            content: url("../../img/card_shirt.svg");
+        }
+
+        .suit {
+            display: none;
+        }
+
+        .rank {
+            display: none;
+        }
+    }
+}
+
+.card[data-suit="heart"] {
+    $current-suit: $suit-heart;
+
+    .suit {
+        &__upper-left,
+        &__center,
+        &__lower-right {
+            background-image: $current-suit;
+        }
+    }
+}
+
+.card[data-suit="tile"] {
+    $current-suit: $suit-tile;
+
+    .suit {
+        &__upper-left,
+        &__center,
+        &__lower-right {
+            background-image: $current-suit;
+        }
+    }
+}
+
+.card[data-suit="clover"] {
+    $current-suit: $suit-clover;
+
+    .suit {
+        &__upper-left,
+        &__center,
+        &__lower-right {
+            background-image: $current-suit;
+        }
+    }
+}
+
+.card[data-suit="pike"] {
+    $current-suit: $suit-pike;
+
+    .suit {
+        &__upper-left,
+        &__center,
+        &__lower-right {
+            background-image: $current-suit;
+        }
+    }
+}
+
+.game {
+    width: 100vw;
+    padding: 22px;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 calc(50vw - 520px);
+    }
+
+    &__timer {
+        width: 151px;
+
+        .header {
+            font-family: StratosSkyeng, sans-serif;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 32px;
+            font-feature-settings: "pnum" on, "lnum" on;
+            color: #fff;
+
+            &__min,
+            &__sec {
+                font-family: StratosSkyeng, sans-serif;
+                font-style: normal;
+                font-weight: 400;
+                font-size: 64px;
+                line-height: 72px;
+                color: #fff;
+            }
+
+            &__sec::before {
+                content: ".";
+            }
+        }
+
+        .timer {
+            display: flex;
+
+            &__header {
+                display: flex;
+                justify-content: flex-end;
+                gap: 57px;
+            }
+        }
+    }
+
+    &__main {
+        display: grid;
+        grid-template-columns: repeat(9, 1fr);
+        grid-template-rows: repeat(4, 1fr);
+        gap: 16px;
+        justify-items: center;
+        margin-top: 48px;
+    }
+
+    &__board {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.button {
+    width: 246px;
+    height: 50px;
+    font-family: StratosSkyeng, sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 32px;
+    color: #fff;
+    background: #7ac100;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: transform 100ms;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+.hidden {
+    display: none;
 }
