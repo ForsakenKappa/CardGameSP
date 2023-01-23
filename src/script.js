@@ -1,8 +1,8 @@
-// Global Parameters 
-window.localStorage.setItem("gameStage", "difficultySelect");
+// Global Parameters
+window.localStorage.setItem("gameStage", "difficultySelect")
 window.localStorage.setItem("difficultySelected", "")
-window.localStorage.setItem("timeSpent", "");
-window.localStorage.setItem("cards", "");
+window.localStorage.setItem("timeSpent", "")
+window.localStorage.setItem("cards", "")
 window.localStorage.setItem("selectedCards", "")
 
 /*
@@ -16,33 +16,27 @@ window.localStorage.setItem("selectedCards", "")
     
 */
 
-
-function handleStateChange(){
-    if(window.localStorage.getItem("gameStage") === "game"){
+function handleStateChange() {
+    if (window.localStorage.getItem("gameStage") === "game") {
         renderGameScreen() // currently does nothing
     }
 }
 
-
-function handleDifficultySelectButton(){
+function handleDifficultySelectButton() {
     window.localStorage.setItem("difficultySelected", this.dataset.difficulty)
-    window.localStorage.setItem("gameStage","game");
+    window.localStorage.setItem("gameStage", "game")
     handleStateChange()
 }
 
-function renderGameScreen(){
+function renderGameScreen() {
     console.log(window.localStorage.getItem("gameStage"))
     console.log(window.localStorage.getItem("difficultySelected"))
     console.log("Dorime")
 }
 
-window.addEventListener("DOMContentLoaded", () =>{
-
-    const difficultyButtons = document.querySelectorAll(".difficulty__button");
-    difficultyButtons.forEach(button => {
+window.addEventListener("DOMContentLoaded", () => {
+    const difficultyButtons = document.querySelectorAll(".difficulty__button")
+    difficultyButtons.forEach((button) => {
         button.addEventListener("click", handleDifficultySelectButton)
     })
-
 })
-
-

@@ -1,5 +1,5 @@
 @font-face {
-    font-family: "StratosSkyeng";
+    font-family: StratosSkyeng;
     src: url("./fonts/Web fonts/stratosskyengweb-medium.woff");
 }
 
@@ -8,108 +8,87 @@
     padding: 0;
 }
 
-.main{
+.main {
     display: flex;
     background-color: #004980;
     width: 100vw;
     height: 100vh;
-
     justify-content: center;
     align-items: center;
 }
 
-.difficulty{
+.difficulty {
     width: 480px;
     height: 459px;
     box-sizing: border-box;
-
-    background: #C2F5FF;
+    background: #c2f5ff;
     border-radius: 12px;
-
     display: flex;
     justify-content: center;
     align-items: center;
     flex-flow: column wrap;
     padding: 32px;
 
-    &__header{
+    &__header {
         width: 208px;
         height: 96px;
         margin-bottom: 48px;
-
-        font-family: 'StratosSkyeng';
+        font-family: StratosSkyeng, sans-serif;
         font-weight: 400;
         font-size: 40px;
         line-height: 48px;
-
         text-align: center;
-
         color: #004980;
     }
 
-    &__settings{
+    &__settings {
         list-style: none;
         display: flex;
         gap: 24px;
         margin-bottom: 67px;
     }
 
-    &__option{
-
-
+    &__option {
         display: flex;
         align-items: center;
         justify-content: center;
-        /* Blue / 100 */
-
         background: none;
-
     }
 
-    &__button{
-
+    &__button {
         width: 96px;
         height: 98px;
-
-        color: #0080C1;
-        background: #ffffff;
-
-        font-family: 'StratosSkyeng';
+        color: #0080c1;
+        background: #fff;
+        font-family: StratosSkyeng, sans-serif;
         font-style: normal;
         font-weight: 400;
         font-size: 64px;
         line-height: 72px;
-        /* or 112% */
-
     }
 
-    &__submit{
+    &__submit {
         width: 246px;
         height: 50px;
-
-        /* Pres → Caption S */
-
-        font-family: 'StratosSkyeng';
+        font-family: StratosSkyeng, sans-serif;
         font-weight: 400;
         font-size: 24px;
         line-height: 32px;
-        /* or 133% */
-
-        color: #FFFFFF;
-        /* Salad / 60 */
-
-        background: #7AC100;
+        color: #fff;
+        background: #7ac100;
     }
 
-    .button{
+    .button {
         border-radius: 12px;
         border: none;
         cursor: pointer;
         transition: transform 100ms;
-        &:hover{
+
+        &:hover {
             transform: scale(1.05);
         }
-        &:active{
+
+        &:active {
             transform: scale(0.95);
         }
     }
