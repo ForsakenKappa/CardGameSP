@@ -111,15 +111,15 @@
 .card .suit__center {
   width: 29px;
   height: 25px;
-  left: 29px;
-  top: 46px;
+  left: 33px;
+  top: 55px;
 }
 .card_disclosed {
   background-color: #e4fbff;
 }
 .card_disclosed::before {
   position: absolute;
-  top: 11px;
+  top: 23px;
   content: url("../../img/card_shirt.svg");
 }
 .card_disclosed .suit {

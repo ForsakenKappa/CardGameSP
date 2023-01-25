@@ -135,8 +135,8 @@ $current-suit: var(--current-suit);
         &__center {
             width: 29px;
             height: 25px;
-            left: 29px;
-            top: 46px;
+            left: 33px;
+            top: 55px;
         }
     }
 
@@ -145,7 +145,7 @@ $current-suit: var(--current-suit);
 
         &::before {
             position: absolute;
-            top: 11px;
+            top: 23px;
             content: url("../../img/card_shirt.svg");
         }
 
