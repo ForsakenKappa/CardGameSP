@@ -1,44 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./src/css/style.css">
-    <script src="./src/script.js"></script>
-    <title>Card Game</title>
-</head>
-<body>
-    <section class="main">
-        <div class="difficulty hidden">
-            <h1 class="difficulty__header">Выберите сложность</h1>
-            <ul class="difficulty__settings">
-                <li class="difficulty__option"><button class="difficulty__button button" data-difficulty="1">1</button></li>
-                <li class="difficulty__option"><button class="difficulty__button button" data-difficulty="2">2</button></li>
-                <li class="difficulty__option"><button class="difficulty__button button" data-difficulty="3">3</button></li>
-            </ul>
-            <button class="difficulty__submit button">Старт</button>
-        </div>
-        <div class="game">
-            <div class="game__header">
-                <div class="game__timer">
-                    <div class="timer__header">
-                        <p class="header">min</p>
-                        <p class="header">sec</p>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./src/css/style.css" />
+        <script src="./src/script.js" defer></script>
+        <title>Card Game</title>
+    </head>
+    <body>
+        <section class="main">
+            <div class="difficulty hidden">
+                <h1 class="difficulty__header">Выберите сложность</h1>
+                <ul class="difficulty__settings">
+                    <li class="difficulty__option">
+                        <button
+                            class="difficulty__button button"
+                            data-difficulty="1"
+                        >
+                            1
+                        </button>
+                    </li>
+                    <li class="difficulty__option">
+                        <button
+                            class="difficulty__button button"
+                            data-difficulty="2"
+                        >
+                            2
+                        </button>
+                    </li>
+                    <li class="difficulty__option">
+                        <button
+                            class="difficulty__button button"
+                            data-difficulty="3"
+                        >
+                            3
+                        </button>
+                    </li>
+                </ul>
+                <button class="difficulty__submit button">Старт</button>
+            </div>
+            <div class="game">
+                <div class="game__header">
+                    <div class="game__timer">
+                        <div class="timer__header">
+                            <p class="header">min</p>
+                            <p class="header">sec</p>
+                        </div>
+                        <div class="timer">
+                            <p class="header header__min">00</p>
+                            <p class="header header__sec">00</p>
+                        </div>
                     </div>
-                    <div class="timer">
-                        <p class="header header__min">00</p>
-                        <p class="header header__sec">00</p>
+                    <div class="game__button">
+                        <button class="start-over__button button">
+                            Начать заново
+                        </button>
                     </div>
                 </div>
-                <div class="game__button">
-                    <button class="start-over__button button">Начать заново</button>
+                <div class="game__board">
+                    <div class="game__main"></div>
                 </div>
             </div>
-            <div class="game__board">
-                <div class="game__main"></div>
-            </div>
-        </div>
-    </section>
-</body>
+        </section>
+    </body>
 </html>
