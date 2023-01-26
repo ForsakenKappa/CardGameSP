@@ -3,10 +3,10 @@ window.localStorage.setItem("currentScreen", "difficulty")
 window.localStorage.setItem("difficultySelected", "")
 window.localStorage.setItem("timeSpent", "")
 window.localStorage.setItem("cards", "")
-window.localStorage.setItem("selectedCards", "")
 
 let currentScreen
 let currentScreenDOM
+let isCardShown
 
 /*
     План:
@@ -21,8 +21,16 @@ let currentScreenDOM
 */
 
 function handleStateChange() {
+    currentScreenDOM.classList.toggle("hidden")
+    currentScreen = window.localStorage.getItem("currentScreen")
+    currentScreenDOM = document.querySelector(`.${currentScreen}`)
+    currentScreenDOM.classList.toggle("hidden")
+
     if (window.localStorage.getItem("currentScreen") === "game") {
         renderGameScreen()
+    }
+    if (window.localStorage.getItem("currentScreen") === "difficulty") {
+        // Pass
     }
 }
 
@@ -33,14 +41,53 @@ function handleDifficultySelectButton() {
 }
 
 function renderGameScreen() {
-    currentScreenDOM.classList.toggle("hidden")
-    currentScreen = window.localStorage.getItem("currentScreen")
-    currentScreenDOM = document.querySelector(`.${currentScreen}`)
-    currentScreenDOM.classList.toggle("hidden")
+    let gameDiv = document.querySelector(".game__main")
+    gameDiv.textContent = ""
 
-    console.log(window.localStorage.getItem("currentScreen"))
-    console.log(window.localStorage.getItem("difficultySelected"))
-    console.log("Dorime")
+    //    Debug layout    //
+    // Tiles
+    gameDiv.appendChild(createCard("tile", "A", isCardShown))
+    gameDiv.appendChild(createCard("tile", "J", isCardShown))
+    gameDiv.appendChild(createCard("tile", "K", isCardShown))
+    gameDiv.appendChild(createCard("tile", "Q", isCardShown))
+    gameDiv.appendChild(createCard("tile", "10", isCardShown))
+    gameDiv.appendChild(createCard("tile", "9", isCardShown))
+    gameDiv.appendChild(createCard("tile", "8", isCardShown))
+    gameDiv.appendChild(createCard("tile", "7", isCardShown))
+    gameDiv.appendChild(createCard("tile", "6", isCardShown))
+
+    // Pikes
+    gameDiv.appendChild(createCard("pike", "A", isCardShown))
+    gameDiv.appendChild(createCard("pike", "J", isCardShown))
+    gameDiv.appendChild(createCard("pike", "K", isCardShown))
+    gameDiv.appendChild(createCard("pike", "Q", isCardShown))
+    gameDiv.appendChild(createCard("pike", "10", isCardShown))
+    gameDiv.appendChild(createCard("pike", "9", isCardShown))
+    gameDiv.appendChild(createCard("pike", "8", isCardShown))
+    gameDiv.appendChild(createCard("pike", "7", isCardShown))
+    gameDiv.appendChild(createCard("pike", "6", isCardShown))
+
+    // Hearts
+    gameDiv.appendChild(createCard("heart", "A", isCardShown))
+    gameDiv.appendChild(createCard("heart", "J", isCardShown))
+    gameDiv.appendChild(createCard("heart", "K", isCardShown))
+    gameDiv.appendChild(createCard("heart", "Q", isCardShown))
+    gameDiv.appendChild(createCard("heart", "10", isCardShown))
+    gameDiv.appendChild(createCard("heart", "9", isCardShown))
+    gameDiv.appendChild(createCard("heart", "8", isCardShown))
+    gameDiv.appendChild(createCard("heart", "7", isCardShown))
+    gameDiv.appendChild(createCard("heart", "6", isCardShown))
+
+    // Clovers
+    gameDiv.appendChild(createCard("clover", "A", isCardShown))
+    gameDiv.appendChild(createCard("clover", "J", isCardShown))
+    gameDiv.appendChild(createCard("clover", "K", isCardShown))
+    gameDiv.appendChild(createCard("clover", "Q", isCardShown))
+    gameDiv.appendChild(createCard("clover", "10", isCardShown))
+    gameDiv.appendChild(createCard("clover", "9", isCardShown))
+    gameDiv.appendChild(createCard("clover", "8", isCardShown))
+    gameDiv.appendChild(createCard("clover", "7", isCardShown))
+    gameDiv.appendChild(createCard("clover", "6", isCardShown))
 }
 
 function createCard(suit, rank, isDisclosed = true) {
@@ -91,17 +138,35 @@ function createCard(suit, rank, isDisclosed = true) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+    // TODO:
+    // Избавиться от этого EventListener'a
+
     currentScreen = window.localStorage.getItem("currentScreen")
     currentScreenDOM = document.querySelector(`.${currentScreen}`)
+
+    const screenButtons = document.querySelectorAll(".footer__screen-button")
+    screenButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            let buttonId = button.id
+            switch (buttonId) {
+                case "1":
+                    window.localStorage.setItem("currentScreen", "difficulty")
+                    break
+                case "2":
+                    window.localStorage.setItem("currentScreen", "game")
+                    isCardShown = false
+                    break
+                case "3":
+                    window.localStorage.setItem("currentScreen", "game")
+                    isCardShown = true
+                    break
+            }
+            handleStateChange()
+        })
+    })
 
     const difficultyButtons = document.querySelectorAll(".difficulty__button")
     difficultyButtons.forEach((button) => {
         button.addEventListener("click", handleDifficultySelectButton)
     })
-
-    let gameDiv = document.querySelector(".game__main")
-
-    for (let i = 0; i < 9 * 4; i++) {
-        gameDiv.appendChild(createCard("heart", "A"))
-    }
 })

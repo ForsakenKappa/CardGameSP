@@ -7,13 +7,40 @@
   padding: 0;
 }
 
-.main {
-  display: flex;
+body {
   background-color: #004980;
   width: 100vw;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.button {
+  width: 246px;
+  height: 50px;
+  font-family: StratosSkyeng, sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 32px;
+  color: #fff;
+  background: #7ac100;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: transform 100ms;
+}
+.button:hover {
+  transform: scale(1.05);
+}
+.button:active {
+  transform: scale(0.95);
+}
+
+.main {
+  display: flex;
   justify-content: center;
   align-items: center;
+  flex: 1;
 }
 
 .difficulty {
@@ -199,25 +226,23 @@
   justify-content: center;
 }
 
-.button {
-  width: 246px;
-  height: 50px;
-  font-family: StratosSkyeng, sans-serif;
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 32px;
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+}
+.footer__header {
   color: #fff;
-  background: #7ac100;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  transition: transform 100ms;
+  margin-bottom: 16px;
 }
-.button:hover {
-  transform: scale(1.05);
+.footer__screen-button {
+  width: 50px;
 }
-.button:active {
-  transform: scale(0.95);
+.footer__screen-buttons {
+  display: flex;
+  gap: 8px;
+  list-style: none;
 }
 
 .hidden {
