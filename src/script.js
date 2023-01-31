@@ -1,4 +1,4 @@
-import { Card } from "./cards"
+import { Card } from "./card"
 
 // Global Parameters
 window.localStorage.setItem("currentScreen", "difficulty")
