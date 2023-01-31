@@ -144,10 +144,6 @@ body {
 }
 .card_disclosed {
   background-color: #e4fbff;
-}
-.card_disclosed::before {
-  position: absolute;
-  top: 23px;
   content: url("../img/card_shirt.svg");
 }
 .card_disclosed .suit {
@@ -156,7 +152,6 @@ body {
 .card_disclosed .rank {
   display: none;
 }
-
 .card:hover {
   transform: scale(1.2);
 }

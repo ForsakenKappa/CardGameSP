@@ -172,12 +172,7 @@ body {
 
     &_disclosed {
         background-color: #e4fbff;
-
-        &::before {
-            position: absolute;
-            top: 23px;
-            content: url("../img/card_shirt.svg");
-        }
+        content: url("../img/card_shirt.svg");
 
         .suit {
             display: none;
@@ -187,10 +182,10 @@ body {
             display: none;
         }
     }
-}
 
-.card:hover {
-    transform: scale(1.2);
+    &:hover {
+        transform: scale(1.2);
+    }
 }
 
 .card[data-suit="heart"] {
