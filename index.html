@@ -40,13 +40,16 @@
                 <button class="difficulty__submit button">Старт</button>
             </div>
             <div class="game hidden">
-                <div class="game__results">
+                <div class="game__results overlay hidden">
                     <div class="game__results-container">
                         <div class="game__results-icon"></div>
                         <h1 class="game__results-header header">Вы живы!</h1>
                         <div class="game__results-time-spent">
                             <p class="game__results-text">Затраченное время</p>
-                            <p class="game__results-timer">00.00</p>
+                            <div class="timer">
+                                <p class="header header__min">00</p>
+                                <p class="header header__sec">00</p>
+                            </div>
                         </div>
                         <button class="game__restart button">Начать заново</button>
                     </div>
@@ -73,7 +76,7 @@
                 </div>
             </div>
         </section>
-        <footer class="footer">
+        <footer class="footer hidden">
             <h1 class="footer__header header">Экраны (dev)</h1>
             <ul class="footer__screen-buttons">
                 <li>

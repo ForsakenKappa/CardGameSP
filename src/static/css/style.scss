@@ -238,8 +238,10 @@ body {
 
 .game {
     width: 100vw;
-    padding: 22px;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 
     &__header {
         display: flex;
@@ -292,11 +294,11 @@ body {
         grid-template-rows: repeat(4, 1fr);
         gap: 16px;
         justify-items: center;
-        margin-top: 48px;
-        z-index: -1;
+        align-items: center;
     }
 
     &__board {
+        flex: 10;
         display: flex;
         justify-content: center;
     }
@@ -314,6 +316,30 @@ body {
         justify-content: center;
         align-items: center;
 
+        .timer {
+            display: flex;
+            margin-top: 10px;
+            margin-bottom: 40px;
+
+            .header {
+                &__sec {
+                    &::before {
+                        content: ".";
+                    }
+                }
+
+                &__sec,
+                &__min {
+                    font-family: StratosSkyeng, sans-serif;
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 64px;
+                    line-height: 72px;
+                    color: #000;
+                }
+            }
+        }
+
         &-time-spent {
             display: flex;
             flex-direction: column;
@@ -322,7 +348,7 @@ body {
         }
 
         &-container {
-            z-index: 10;
+            z-index: 11;
             width: 480px;
             height: 459px;
             box-sizing: border-box;
@@ -335,8 +361,8 @@ body {
             padding: 32px;
         }
 
-        .header {
-            width: 208px;
+        &-header {
+            width: 277px;
             margin-bottom: 28px;
             font-family: StratosSkyeng, sans-serif;
             font-weight: 400;
@@ -344,17 +370,6 @@ body {
             line-height: 48px;
             text-align: center;
             color: #004980;
-        }
-
-        &-timer {
-            margin-top: 10px;
-            margin-bottom: 40px;
-            font-family: StratosSkyeng, sans-serif;
-            font-style: normal;
-            font-weight: 400;
-            font-size: 64px;
-            line-height: 72px;
-            color: #000;
         }
 
         &-text {
