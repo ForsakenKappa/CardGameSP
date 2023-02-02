@@ -55,18 +55,25 @@ function renderGameScreen() {
     let difficultySelected = window.localStorage.getItem("difficultySelected")
     let cardAmount = 0
     let cardsToDuplicate = []
-    if (difficultySelected === "1") {
-        cardAmount = 6
-    } else if (difficultySelected === "2") {
-        cardAmount = 12
-    } else if (difficultySelected === "3") {
-        cardAmount = 18
+
+    switch (difficultySelected) {
+        case "1":
+            cardAmount = 6
+            break
+        case "2":
+            cardAmount = 12
+            break
+        case "3":
+            cardAmount = 18
+            break
+        default:
+            break
     }
 
     // Making grid more "square"
-    let rectangleSides = calculateRectangleSides(cardAmount)
-    gameDiv.style.gridTemplateColumns = `repeat(${rectangleSides[1]}, 1fr)`
-    gameDiv.style.gridTemplateRows = `repeat(${rectangleSides[0]}, 1fr)`
+    let [rectangleHeight, rectangleWidth] = calculateRectangleSides(cardAmount)
+    gameDiv.style.gridTemplateColumns = `repeat(${rectangleWidth}, 1fr)`
+    gameDiv.style.gridTemplateRows = `repeat(${rectangleHeight}, 1fr)`
 
     //Adding cards
     for (let i = 0; i < cardAmount / 2; i++) {
@@ -136,7 +143,7 @@ function handleScreenClick(e) {
             setTimeout(animateCard, 1000, pair[0])
             setTimeout(animateCard, 1000, pair[1])
         }
-        pair = []
+        pair.length = 0
     }
 }
 
