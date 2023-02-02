@@ -1,22 +1,26 @@
+import { Card } from "./card"
+
 // Global Parameters
 window.localStorage.setItem("currentScreen", "difficulty")
-window.localStorage.setItem("difficultySelected", "")
+window.localStorage.setItem("difficultySelected", "3")
 window.localStorage.setItem("timeSpent", "")
 window.localStorage.setItem("cards", "")
 
+//Constants
+
+//Varaibales
 let currentScreen
 let currentScreenDOM
 let isCardShown
+let pair = []
 
 /*
     План:
     
     1. Использовать ЛокалСтораге для возможности сохранения при выходе
-    2. Как-нибудь разделить код, чтобы у меня не было каши из 500 строк
-    3. Игра будет SPA
-        3.1 Скрытие\показывание страниц
-    4. Придумать как запихнуть карты в строки (Я планировал массив, как его в строки запихнуть я не знаю)
+    2. Придумать как запихнуть карты в строки (Я планировал массив, как его в строки запихнуть я не знаю)
                                                (Хотя строка это массив символов, хмм...)
+    3. Переделать генерацию карт
     
 */
 
@@ -27,6 +31,7 @@ function handleStateChange() {
     currentScreenDOM.classList.toggle("hidden")
 
     if (window.localStorage.getItem("currentScreen") === "game") {
+        isCardShown = false
         renderGameScreen()
     }
     if (window.localStorage.getItem("currentScreen") === "difficulty") {
@@ -44,97 +49,142 @@ function renderGameScreen() {
     let gameDiv = document.querySelector(".game__main")
     gameDiv.textContent = ""
 
-    //    Debug layout    //
-    // Tiles
-    gameDiv.appendChild(createCard("tile", "A", isCardShown))
-    gameDiv.appendChild(createCard("tile", "J", isCardShown))
-    gameDiv.appendChild(createCard("tile", "K", isCardShown))
-    gameDiv.appendChild(createCard("tile", "Q", isCardShown))
-    gameDiv.appendChild(createCard("tile", "10", isCardShown))
-    gameDiv.appendChild(createCard("tile", "9", isCardShown))
-    gameDiv.appendChild(createCard("tile", "8", isCardShown))
-    gameDiv.appendChild(createCard("tile", "7", isCardShown))
-    gameDiv.appendChild(createCard("tile", "6", isCardShown))
+    gameDiv.removeEventListener("click", handleScreenClick)
+    gameDiv.addEventListener("click", handleScreenClick)
 
-    // Pikes
-    gameDiv.appendChild(createCard("pike", "A", isCardShown))
-    gameDiv.appendChild(createCard("pike", "J", isCardShown))
-    gameDiv.appendChild(createCard("pike", "K", isCardShown))
-    gameDiv.appendChild(createCard("pike", "Q", isCardShown))
-    gameDiv.appendChild(createCard("pike", "10", isCardShown))
-    gameDiv.appendChild(createCard("pike", "9", isCardShown))
-    gameDiv.appendChild(createCard("pike", "8", isCardShown))
-    gameDiv.appendChild(createCard("pike", "7", isCardShown))
-    gameDiv.appendChild(createCard("pike", "6", isCardShown))
+    let difficultySelected = window.localStorage.getItem("difficultySelected")
+    let cardAmount = 0
+    let cardsToDuplicate = []
 
-    // Hearts
-    gameDiv.appendChild(createCard("heart", "A", isCardShown))
-    gameDiv.appendChild(createCard("heart", "J", isCardShown))
-    gameDiv.appendChild(createCard("heart", "K", isCardShown))
-    gameDiv.appendChild(createCard("heart", "Q", isCardShown))
-    gameDiv.appendChild(createCard("heart", "10", isCardShown))
-    gameDiv.appendChild(createCard("heart", "9", isCardShown))
-    gameDiv.appendChild(createCard("heart", "8", isCardShown))
-    gameDiv.appendChild(createCard("heart", "7", isCardShown))
-    gameDiv.appendChild(createCard("heart", "6", isCardShown))
+    switch (difficultySelected) {
+        case "1":
+            cardAmount = 6
+            break
+        case "2":
+            cardAmount = 12
+            break
+        case "3":
+            cardAmount = 18
+            break
+        default:
+            break
+    }
 
-    // Clovers
-    gameDiv.appendChild(createCard("clover", "A", isCardShown))
-    gameDiv.appendChild(createCard("clover", "J", isCardShown))
-    gameDiv.appendChild(createCard("clover", "K", isCardShown))
-    gameDiv.appendChild(createCard("clover", "Q", isCardShown))
-    gameDiv.appendChild(createCard("clover", "10", isCardShown))
-    gameDiv.appendChild(createCard("clover", "9", isCardShown))
-    gameDiv.appendChild(createCard("clover", "8", isCardShown))
-    gameDiv.appendChild(createCard("clover", "7", isCardShown))
-    gameDiv.appendChild(createCard("clover", "6", isCardShown))
+    // Making grid more "square"
+    let [rectangleHeight, rectangleWidth] = calculateRectangleSides(cardAmount)
+    gameDiv.style.gridTemplateColumns = `repeat(${rectangleWidth}, 1fr)`
+    gameDiv.style.gridTemplateRows = `repeat(${rectangleHeight}, 1fr)`
+
+    //Adding cards
+    for (let i = 0; i < cardAmount / 2; i++) {
+        let card = new Card(null, null, isCardShown)
+        cardsToDuplicate.push({
+            suit: card.suit,
+            rank: card.rank,
+        })
+        gameDiv.appendChild(card.card)
+    }
+
+    //Shuffle dupplicates
+    cardsToDuplicate = cardsToDuplicate
+        .map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value)
+
+    //Adding duplicates
+    for (let i = 0; i < cardAmount / 2; i++) {
+        let cardParameters = cardsToDuplicate.pop()
+        let card = new Card(
+            cardParameters.suit,
+            cardParameters.rank,
+            isCardShown
+        )
+        gameDiv.appendChild(card.card)
+    }
+
+    //Flashing cards
+    if (!isCardShown) {
+        let cards = document.querySelectorAll(".card")
+        cards.forEach((card) => {
+            setTimeout(animateCard, 5000, card)
+        })
+    }
 }
 
-function createCard(suit, rank, isDisclosed = true) {
-    let cardFragment = document.createDocumentFragment()
-
-    //Create div.card & append it to fragment
-    let cardDiv = document.createElement("div")
-    cardDiv.classList.add("card")
-    if (isDisclosed) {
-        cardDiv.classList.add("card_disclosed")
+function handleScreenClick(e) {
+    // Searching for div.card
+    let currentElement = e.target
+    for (let i = 0; i < 5; i++) {
+        console.log(currentElement.className.includes("card"))
+        if (currentElement.className.includes("card")) break
+        currentElement = currentElement.parentElement
     }
-    cardDiv.dataset.suit = suit
-    cardDiv.dataset.rank = rank
-    cardFragment.appendChild(cardDiv)
 
-    //Create div.suit & append it to div.card
-    let suitDiv = document.createElement("div")
-    suitDiv.classList.add("suit")
-    cardDiv.appendChild(suitDiv)
+    if (!currentElement.className.includes("card")) {
+        console.log("Couldn't find a card")
+        return
+    }
 
-    //Create div.suit's children and append them to div.suit
-    let suitUpperLeft = document.createElement("div")
-    let suitCenter = document.createElement("div")
-    let suitLowerRight = document.createElement("div")
-    suitUpperLeft.classList.add("suit__upper-left")
-    suitCenter.classList.add("suit__center")
-    suitLowerRight.classList.add("suit__lower-right")
-    suitDiv.appendChild(suitUpperLeft)
-    suitDiv.appendChild(suitCenter)
-    suitDiv.appendChild(suitLowerRight)
+    // Clicked on a card hell yea
+    if (!currentElement.className.includes("card_disclosed")) {
+        return
+    }
 
-    //Create div.rank & append it to div.card
-    let cardRank = document.createElement("div")
-    cardRank.classList.add("rank")
-    cardDiv.appendChild(cardRank)
+    animateCard(currentElement)
+    pair.push(currentElement)
 
-    //Create div.rank's children, populate them, & append to div.rank
-    let rankUpperText = document.createElement("p")
-    let rankLowerText = document.createElement("p")
-    rankUpperText.classList.add("rank__text", "rank__text_upper-text")
-    rankLowerText.classList.add("rank__text", "rank__text_lower-text")
-    rankUpperText.textContent = rank
-    rankLowerText.textContent = rank
-    cardRank.appendChild(rankUpperText)
-    cardRank.appendChild(rankLowerText)
+    if (pair.length === 2) {
+        if (
+            pair[0].dataset.suit === pair[1].dataset.suit &&
+            pair[0].dataset.rank === pair[1].dataset.rank
+        ) {
+            //Pass
+        } else {
+            setTimeout(animateCard, 1000, pair[0])
+            setTimeout(animateCard, 1000, pair[1])
+        }
+        pair.length = 0
+    }
+}
 
-    return cardFragment
+function calculateRectangleSides(area) {
+    let sideA
+    let sideB
+    let distanceArr = []
+
+    for (let i = 0; i <= area; i++) {
+        if (area % i === 0) {
+            let num2 = area / i
+            let distance = Math.abs(num2 - i)
+            distanceArr.push(distance)
+        }
+    }
+
+    distanceArr.sort((a, b) => b - a)
+
+    let largestDistance = distanceArr.shift()
+    let smallestDistnace = distanceArr.pop()
+
+    for (let i = 0; i < largestDistance; i++) {
+        if (area % i === 0 && area / i - i === smallestDistnace) {
+            sideA = i
+            sideB = area / i
+            break
+        }
+    }
+
+    return [sideA, sideB]
+}
+
+function animateCard(cardElement) {
+    cardElement.classList.toggle("card_disclosed")
+    cardElement.animate(
+        [{ transform: "rotateY(90deg)" }, { transform: "rotateY(0deg)" }],
+        {
+            iterations: 1,
+            duration: 200,
+        }
+    )
 }
 
 window.addEventListener("DOMContentLoaded", () => {

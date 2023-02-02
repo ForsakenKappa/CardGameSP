@@ -1,12 +1,12 @@
-$suit-heart: url("../../img/heart.svg");
-$suit-pike: url("../../img/pike.svg");
-$suit-clover: url("../../img/clover.svg");
-$suit-tile: url("../../img/tile.svg");
+$suit-heart: url("../img/heart.svg");
+$suit-pike: url("../img/pike.svg");
+$suit-clover: url("../img/clover.svg");
+$suit-tile: url("../img/tile.svg");
 $current-suit: var(--current-suit);
 
 @font-face {
     font-family: StratosSkyeng;
-    src: url("../../fonts/Web fonts/stratosskyengweb-medium.woff");
+    src: url("../fonts/stratosskyengweb-medium.woff");
 }
 
 * {
@@ -107,6 +107,7 @@ body {
     /* Fallback */
     $current-suit: $suit-pike;
 
+    transition: transform 0.2s ease-in-out;
     width: 95px;
     height: 133px;
     border-radius: 4px;
@@ -171,12 +172,7 @@ body {
 
     &_disclosed {
         background-color: #e4fbff;
-
-        &::before {
-            position: absolute;
-            top: 23px;
-            content: url("../../img/card_shirt.svg");
-        }
+        content: url("../img/card_shirt.svg");
 
         .suit {
             display: none;
@@ -185,6 +181,10 @@ body {
         .rank {
             display: none;
         }
+    }
+
+    &:hover {
+        transform: scale(1.2);
     }
 }
 
