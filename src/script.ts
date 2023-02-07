@@ -17,24 +17,15 @@ const resultText = document.querySelector(".game__results-header")
 
 const INTRO_DELAY = 4000
 
-let currentScreen
-let currentScreenDOM
-let isCardShown
-let pair = []
-let openCardAmount
-let cardAmount
-let isGameWon
+let currentScreen : string
+let currentScreenDOM : HTMLElement
+let isCardShown : boolean
+let pair : Array<HTMLElement> = []
+let openCardAmount : number
+let cardAmount : number
+let isGameWon : boolean
 let timerCount = 0
-let timerID
-
-/*
-    План:
-    
-    1. Использовать ЛокалСтораге для возможности сохранения при выходе
-    2. Придумать как запихнуть карты в строки (Я планировал массив, как его в строки запихнуть я не знаю)
-                                               (Хотя строка это массив символов, хмм...)
-    
-*/
+let timerID : NodeJS.Timer
 
 function handleStateChange() {
     clearInterval(timerID)
@@ -51,9 +42,9 @@ function handleStateChange() {
     }
 
     if (window.localStorage.getItem("currentScreen") === "difficulty") {
-        gameScreen.textContent = ""
+        if (gameScreen) gameScreen.textContent = ""
         if (currentScreenDOM.className.includes("overlay"))
-            document.querySelector(".game").classList.toggle("hidden")
+            document.querySelector(".game")?.classList.toggle("hidden")
     }
 
     if (
@@ -65,28 +56,30 @@ function handleStateChange() {
 
     // currentScreen changing
     if (!isOverlay) currentScreenDOM.classList.toggle("hidden")
-    currentScreen = window.localStorage.getItem("currentScreen")
-    currentScreenDOM = document.querySelector(`.${currentScreen}`)
+    currentScreen = window.localStorage.getItem("currentScreen")!
+    currentScreenDOM = document.querySelector(`.${currentScreen}`)!
     currentScreenDOM.classList.toggle("hidden")
 
+
     //After current screen changed
+    if (resultIcon && resultText) {
+        (<HTMLElement>resultIcon).style.backgroundImage = isGameWon
+            ? "url(./static/img/win-icon.png)"
+            : "url(./static/img/lose-icon.png)"
 
-    resultIcon.style.backgroundImage = isGameWon
-        ? "url(./static/img/win-icon.png)"
-        : "url(./static/img/lose-icon.png)"
-
-    resultText.textContent = isGameWon ? "Вы победили!" : "Вы проиграли!"
+        resultText.textContent = isGameWon ? "Вы победили!" : "Вы проиграли!"
+    }
 }
 
-function handleDifficultySelectButton() {
+function handleDifficultySelectButton(this: any) {
     window.localStorage.setItem("difficultySelected", this.dataset.difficulty)
     window.localStorage.setItem("currentScreen", "game")
     handleStateChange()
 }
 
 function initGameScreen() {
-    gameScreen.removeEventListener("click", handleScreenClick)
-    gameScreen.addEventListener("click", handleScreenClick)
+    gameScreen!.removeEventListener("click", handleScreenClick)
+    gameScreen!.addEventListener("click", handleScreenClick)
 
     let difficultySelected = window.localStorage.getItem("difficultySelected")
     let cardsToDuplicate = []
@@ -106,9 +99,11 @@ function initGameScreen() {
     }
 
     // Making grid more "square"
-    let [rectangleHeight, rectangleWidth] = calculateRectangleSides(cardAmount)
-    gameScreen.style.gridTemplateColumns = `repeat(${rectangleWidth}, 95px)`
-    gameScreen.style.gridTemplateRows = `repeat(${rectangleHeight}, 133px)`
+    let rectangleHeight : number 
+    let rectangleWidth : number 
+    [rectangleHeight, rectangleWidth] = calculateRectangleSides(cardAmount) as number[]
+    (<HTMLElement>gameScreen).style.gridTemplateColumns = `repeat(${rectangleWidth}, 95px)` as string // I have no idea what's that
+    (<HTMLElement>gameScreen).style.gridTemplateRows = `repeat(${rectangleHeight}, 133px)`
 
     //Adding cards
     for (let i = 0; i < cardAmount / 2; i++) {
@@ -117,7 +112,7 @@ function initGameScreen() {
             suit: card.suit,
             rank: card.rank,
         })
-        gameScreen.appendChild(card.card)
+        gameScreen!.appendChild(card.card)
     }
 
     //Shuffle dupplicates
@@ -130,11 +125,11 @@ function initGameScreen() {
     for (let i = 0; i < cardAmount / 2; i++) {
         let cardParameters = cardsToDuplicate.pop()
         let card = new Card(
-            cardParameters.suit,
-            cardParameters.rank,
+            cardParameters!.suit,
+            cardParameters!.rank,
             isCardShown
         )
-        gameScreen.appendChild(card.card)
+        gameScreen!.appendChild(card.card)
     }
 
     //Flashing cards
@@ -151,13 +146,14 @@ function initGameScreen() {
     }, INTRO_DELAY)
 }
 
-function handleScreenClick(e) {
+function handleScreenClick(e : Event) {
     // Searching for div.card
-    let currentElement = e.target
+    let currentElement = e.target as HTMLElement
+    let className = currentElement.className
     for (let i = 0; i < 5; i++) {
-        console.log(currentElement.className.includes("card"))
-        if (currentElement.className.includes("card")) break
-        currentElement = currentElement.parentElement
+        console.log(className.includes("card"))
+        if (className.includes("card")) break
+        currentElement = currentElement.parentElement !
     }
 
     if (!currentElement.className.includes("card")) {
@@ -196,10 +192,12 @@ function handleScreenClick(e) {
     }
 }
 
-function calculateRectangleSides(area) {
-    let sideA
-    let sideB
-    let distanceArr = []
+function calculateRectangleSides(area : number) : Array<number> {
+    let sideA : number = 0
+    let sideB : number = 0
+    let largestDistance : number 
+    let smallestDistnace : number
+    let distanceArr : Array<number> = []
 
     for (let i = 0; i <= area; i++) {
         if (area % i === 0) {
@@ -211,8 +209,8 @@ function calculateRectangleSides(area) {
 
     distanceArr.sort((a, b) => b - a)
 
-    let largestDistance = distanceArr.shift()
-    let smallestDistnace = distanceArr.pop()
+    largestDistance = distanceArr.shift() !
+    smallestDistnace = distanceArr.pop()  !
 
     for (let i = 0; i < largestDistance; i++) {
         if (area % i === 0 && area / i - i === smallestDistnace) {
@@ -222,10 +220,12 @@ function calculateRectangleSides(area) {
         }
     }
 
+    let sides : Array<number> = [sideA, sideB]
+
     return [sideA, sideB]
 }
 
-function animateCard(cardElement) {
+function animateCard(cardElement : HTMLElement) : void {
     cardElement.classList.toggle("card_disclosed")
     cardElement.animate(
         [{ transform: "rotateY(90deg)" }, { transform: "rotateY(0deg)" }],
@@ -236,23 +236,23 @@ function animateCard(cardElement) {
     )
 }
 
-function updateTimer() {
+function updateTimer() : void{
     timerCount++
     let seconds = timerCount % 60
     let minutes = Math.floor(timerCount / 60)
 
     secondsText.forEach((text) => {
-        text.textContent = seconds < 10 ? `0${seconds}` : seconds
+        text.textContent = seconds < 10 ? `0${seconds}` : String(seconds)
     })
 
     minutesText.forEach((text) => {
-        text.textContent = minutes < 10 ? `0${minutes}` : minutes
+        text.textContent = minutes < 10 ? `0${minutes}` : String(minutes) 
     })
 }
 
 function main() {
-    currentScreen = window.localStorage.getItem("currentScreen")
-    currentScreenDOM = document.querySelector(`.${currentScreen}`)
+    currentScreen = window.localStorage.getItem("currentScreen")!
+    currentScreenDOM = document.querySelector(`.${currentScreen}`)!
 
     restartButtons.forEach((button) => {
         button.addEventListener("click", () => {

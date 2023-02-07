@@ -228,6 +228,7 @@ body {
   flex: 10;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 .game__results {
   height: 100%;
