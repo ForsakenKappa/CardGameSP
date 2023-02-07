@@ -56,8 +56,8 @@ function handleStateChange() {
 
     // currentScreen changing
     if (!isOverlay) currentScreenDOM.classList.toggle("hidden")
-    currentScreen = window.localStorage.getItem("currentScreen")!
-    currentScreenDOM = document.querySelector(`.${currentScreen}`)!
+    currentScreen = window.localStorage.getItem("currentScreen")   as string
+    currentScreenDOM = document.querySelector(`.${currentScreen}`) as HTMLElement
     currentScreenDOM.classList.toggle("hidden")
 
 
@@ -71,15 +71,16 @@ function handleStateChange() {
     }
 }
 
-function handleDifficultySelectButton(this: any) {
-    window.localStorage.setItem("difficultySelected", this.dataset.difficulty)
+function handleDifficultySelectButton(this: HTMLElement) {
+    if (this.dataset.difficulty) window.localStorage.setItem("difficultySelected", this.dataset.difficulty)
     window.localStorage.setItem("currentScreen", "game")
     handleStateChange()
 }
 
 function initGameScreen() {
-    gameScreen!.removeEventListener("click", handleScreenClick)
-    gameScreen!.addEventListener("click", handleScreenClick)
+    if (!gameScreen) return
+    gameScreen.removeEventListener("click", handleScreenClick)
+    gameScreen.addEventListener("click", handleScreenClick)
 
     let difficultySelected = window.localStorage.getItem("difficultySelected")
     let cardsToDuplicate = []
@@ -112,7 +113,7 @@ function initGameScreen() {
             suit: card.suit,
             rank: card.rank,
         })
-        gameScreen!.appendChild(card.card)
+        gameScreen.appendChild(card.card)
     }
 
     //Shuffle dupplicates
@@ -124,12 +125,13 @@ function initGameScreen() {
     //Adding duplicates
     for (let i = 0; i < cardAmount / 2; i++) {
         let cardParameters = cardsToDuplicate.pop()
+        if (!cardParameters) return
         let card = new Card(
-            cardParameters!.suit,
-            cardParameters!.rank,
+            cardParameters.suit,
+            cardParameters.rank,
             isCardShown
         )
-        gameScreen!.appendChild(card.card)
+        gameScreen.appendChild(card.card)
     }
 
     //Flashing cards
@@ -153,7 +155,7 @@ function handleScreenClick(e : Event) {
     for (let i = 0; i < 5; i++) {
         console.log(className.includes("card"))
         if (className.includes("card")) break
-        currentElement = currentElement.parentElement !
+        currentElement = currentElement.parentElement as HTMLElement
     }
 
     if (!currentElement.className.includes("card")) {
@@ -251,8 +253,9 @@ function updateTimer() : void{
 }
 
 function main() {
-    currentScreen = window.localStorage.getItem("currentScreen")!
-    currentScreenDOM = document.querySelector(`.${currentScreen}`)!
+
+    currentScreen = window.localStorage.getItem("currentScreen")   as string
+    currentScreenDOM = document.querySelector(`.${currentScreen}`) as HTMLElement
 
     restartButtons.forEach((button) => {
         button.addEventListener("click", () => {
