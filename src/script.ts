@@ -107,7 +107,7 @@ function initGameScreen() {
 
     //Adding cards
     for (let i = 0; i < cardAmount / 2; i++) {
-        let card = new Card(null, null, isCardShown)
+        let card = new Card(undefined, undefined, isCardShown)
         cardsToDuplicate.push({
             suit: card.suit,
             rank: card.rank,

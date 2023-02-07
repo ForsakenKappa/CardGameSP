@@ -1,5 +1,10 @@
 export class Card {
-    constructor(suit, rank, isDisclosed = true) {
+
+    suit? : string
+    rank? : string
+    isDisclosed : boolean
+
+    constructor(suit? : string, rank? : string, isDisclosed = true) {
         this.suit = suit ? suit : this.getRandomSuit()
         this.rank = rank ? rank : this.getRandomRank()
         this.isDisclosed = isDisclosed
@@ -9,13 +14,13 @@ export class Card {
         return this.createCard()
     }
 
-    getRandomSuit() {
+    getRandomSuit() : string {
         let suits = ["heart", "clover", "tile", "pike"]
         let suit = suits[Math.floor(Math.random() * 10) % suits.length]
         return suit
     }
 
-    getRandomRank() {
+    getRandomRank() : string {
         let ranks = ["6", "7", "8", "9", "10", "J", "Q", "K", "A"]
         let rank = ranks[Math.floor(Math.random() * 10) % ranks.length]
         return rank
@@ -60,8 +65,8 @@ export class Card {
         let rankLowerText = document.createElement("p")
         rankUpperText.classList.add("rank__text", "rank__text_upper-text")
         rankLowerText.classList.add("rank__text", "rank__text_lower-text")
-        rankUpperText.textContent = this.rank
-        rankLowerText.textContent = this.rank
+        rankUpperText.textContent = this.rank!
+        rankLowerText.textContent = this.rank!
         cardRank.appendChild(rankUpperText)
         cardRank.appendChild(rankLowerText)
 
