@@ -222,8 +222,6 @@ function calculateRectangleSides(area : number) : Array<number> {
         }
     }
 
-    let sides : Array<number> = [sideA, sideB]
-
     return [sideA, sideB]
 }
 
