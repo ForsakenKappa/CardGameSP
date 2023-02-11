@@ -17,15 +17,16 @@ const resultText = document.querySelector(".game__results-header")
 
 const INTRO_DELAY = 4000
 
-let currentScreen : string
-let currentScreenDOM : HTMLElement
-let isCardShown : boolean
-let pair : Array<HTMLElement> = []
-let openCardAmount : number
-let cardAmount : number
-let isGameWon : boolean
+const pair: Array<HTMLElement> = []
+
+let currentScreen: string
+let currentScreenDOM: HTMLElement
+let isCardShown: boolean
+let openCardAmount: number
+let cardAmount: number
+let isGameWon: boolean
 let timerCount = 0
-let timerID : NodeJS.Timer
+let timerID: NodeJS.Timer
 
 function handleStateChange() {
     clearInterval(timerID)
@@ -56,14 +57,15 @@ function handleStateChange() {
 
     // currentScreen changing
     if (!isOverlay) currentScreenDOM.classList.toggle("hidden")
-    currentScreen = window.localStorage.getItem("currentScreen")   as string
-    currentScreenDOM = document.querySelector(`.${currentScreen}`) as HTMLElement
+    currentScreen = window.localStorage.getItem("currentScreen") as string
+    currentScreenDOM = document.querySelector(
+        `.${currentScreen}`
+    ) as HTMLElement
     currentScreenDOM.classList.toggle("hidden")
-
 
     //After current screen changed
     if (resultIcon && resultText) {
-        (<HTMLElement>resultIcon).style.backgroundImage = isGameWon
+        ;(<HTMLElement>resultIcon).style.backgroundImage = isGameWon
             ? "url(./static/img/win-icon.png)"
             : "url(./static/img/lose-icon.png)"
 
@@ -72,7 +74,11 @@ function handleStateChange() {
 }
 
 function handleDifficultySelectButton(this: HTMLElement) {
-    if (this.dataset.difficulty) window.localStorage.setItem("difficultySelected", this.dataset.difficulty)
+    if (this.dataset.difficulty)
+        window.localStorage.setItem(
+            "difficultySelected",
+            this.dataset.difficulty
+        )
     window.localStorage.setItem("currentScreen", "game")
     handleStateChange()
 }
@@ -82,7 +88,7 @@ function initGameScreen() {
     gameScreen.removeEventListener("click", handleScreenClick)
     gameScreen.addEventListener("click", handleScreenClick)
 
-    let difficultySelected = window.localStorage.getItem("difficultySelected")
+    const difficultySelected = window.localStorage.getItem("difficultySelected")
     let cardsToDuplicate = []
 
     switch (difficultySelected) {
@@ -100,15 +106,21 @@ function initGameScreen() {
     }
 
     // Making grid more "square"
-    let rectangleHeight : number 
-    let rectangleWidth : number 
-    [rectangleHeight, rectangleWidth] = calculateRectangleSides(cardAmount) as number[]
-    (<HTMLElement>gameScreen).style.gridTemplateColumns = `repeat(${rectangleWidth}, 95px)` as string // I have no idea what's that
-    (<HTMLElement>gameScreen).style.gridTemplateRows = `repeat(${rectangleHeight}, 133px)`
+    let rectangleHeight: number
+    let rectangleWidth: number
+        // eslint-disable-next-line prefer-const
+    ;[rectangleHeight, rectangleWidth] = calculateRectangleSides(
+        cardAmount
+    ) as number[]
+    ;(<HTMLElement>gameScreen).style.gridTemplateColumns =
+        `repeat(${rectangleWidth}, 95px)` as string // I have no idea what's that
+    ;(<HTMLElement>(
+        gameScreen
+    )).style.gridTemplateRows = `repeat(${rectangleHeight}, 133px)`
 
     //Adding cards
     for (let i = 0; i < cardAmount / 2; i++) {
-        let card = new Card(undefined, undefined, isCardShown)
+        const card = new Card(undefined, undefined, isCardShown)
         cardsToDuplicate.push({
             suit: card.suit,
             rank: card.rank,
@@ -124,9 +136,9 @@ function initGameScreen() {
 
     //Adding duplicates
     for (let i = 0; i < cardAmount / 2; i++) {
-        let cardParameters = cardsToDuplicate.pop()
+        const cardParameters = cardsToDuplicate.pop()
         if (!cardParameters) return
-        let card = new Card(
+        const card = new Card(
             cardParameters.suit,
             cardParameters.rank,
             isCardShown
@@ -136,7 +148,7 @@ function initGameScreen() {
 
     //Flashing cards
     if (!isCardShown) {
-        let cards = document.querySelectorAll(".card")
+        const cards = document.querySelectorAll(".card")
         cards.forEach((card) => {
             setTimeout(animateCard, INTRO_DELAY, card)
         })
@@ -148,10 +160,10 @@ function initGameScreen() {
     }, INTRO_DELAY)
 }
 
-function handleScreenClick(e : Event) {
+function handleScreenClick(e: Event) {
     // Searching for div.card
     let currentElement = e.target as HTMLElement
-    let className = currentElement.className
+    const className = currentElement.className
     for (let i = 0; i < 5; i++) {
         console.log(className.includes("card"))
         if (className.includes("card")) break
@@ -194,16 +206,17 @@ function handleScreenClick(e : Event) {
     }
 }
 
-function calculateRectangleSides(area : number) : Array<number> {
-    let sideA : number = 0
-    let sideB : number = 0
-    let largestDistance : number 
-    let smallestDistnace : number
-    let distanceArr : Array<number> = []
+function calculateRectangleSides(area: number): Array<number> {
+    let sideA = 0
+    let sideB = 0
+
+    const distanceArr: Array<number> = []
 
     for (let i = 0; i <= area; i++) {
         if (area % i === 0) {
+            // eslint-disable-next-line prefer-const
             let num2 = area / i
+            // eslint-disable-next-line prefer-const
             let distance = Math.abs(num2 - i)
             distanceArr.push(distance)
         }
@@ -211,8 +224,8 @@ function calculateRectangleSides(area : number) : Array<number> {
 
     distanceArr.sort((a, b) => b - a)
 
-    largestDistance = distanceArr.shift() !
-    smallestDistnace = distanceArr.pop()  !
+    const largestDistance = distanceArr.shift() as number
+    const smallestDistnace = distanceArr.pop() as number
 
     for (let i = 0; i < largestDistance; i++) {
         if (area % i === 0 && area / i - i === smallestDistnace) {
@@ -225,7 +238,7 @@ function calculateRectangleSides(area : number) : Array<number> {
     return [sideA, sideB]
 }
 
-function animateCard(cardElement : HTMLElement) : void {
+function animateCard(cardElement: HTMLElement): void {
     cardElement.classList.toggle("card_disclosed")
     cardElement.animate(
         [{ transform: "rotateY(90deg)" }, { transform: "rotateY(0deg)" }],
@@ -236,24 +249,25 @@ function animateCard(cardElement : HTMLElement) : void {
     )
 }
 
-function updateTimer() : void{
+function updateTimer(): void {
     timerCount++
-    let seconds = timerCount % 60
-    let minutes = Math.floor(timerCount / 60)
+    const seconds = timerCount % 60
+    const minutes = Math.floor(timerCount / 60)
 
     secondsText.forEach((text) => {
         text.textContent = seconds < 10 ? `0${seconds}` : String(seconds)
     })
 
     minutesText.forEach((text) => {
-        text.textContent = minutes < 10 ? `0${minutes}` : String(minutes) 
+        text.textContent = minutes < 10 ? `0${minutes}` : String(minutes)
     })
 }
 
 function main() {
-
-    currentScreen = window.localStorage.getItem("currentScreen")   as string
-    currentScreenDOM = document.querySelector(`.${currentScreen}`) as HTMLElement
+    currentScreen = window.localStorage.getItem("currentScreen") as string
+    currentScreenDOM = document.querySelector(
+        `.${currentScreen}`
+    ) as HTMLElement
 
     restartButtons.forEach((button) => {
         button.addEventListener("click", () => {
@@ -264,7 +278,7 @@ function main() {
 
     screenButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            let buttonId = button.id
+            const buttonId = button.id
             switch (buttonId) {
                 case "1":
                     window.localStorage.setItem("currentScreen", "difficulty")

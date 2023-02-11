@@ -4,14 +4,17 @@
     "es6": true,
     "node": true
   },
-  "extends": ["eslint:recommended", "prettier"],
+  "extends": ["eslint:recommended","plugin:@typescript-eslint/recommended", "prettier"],
   "plugins": [
-    "prettier"
+    "prettier",
+    "@typescript-eslint"
   ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
+  "root" : true,
   "rules": {
     "prettier/prettier": "error",
     "camelcase": [
