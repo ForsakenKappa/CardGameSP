@@ -9,7 +9,10 @@ window.localStorage.setItem("cards", "")
 const restartButtons = document.querySelectorAll(".game__restart")
 const screenButtons = document.querySelectorAll(".footer__screen-button")
 const gameScreen = document.querySelector(".game__main")
-const difficultyButtons = document.querySelectorAll(".difficulty__button")
+const difficultyRadios = document.querySelectorAll(
+    ".difficulty__radio"
+) as NodeListOf<HTMLInputElement>
+const difficultySubmitButton = document.querySelector(".difficulty__submit")
 const secondsText = document.querySelectorAll(".header__sec")
 const minutesText = document.querySelectorAll(".header__min")
 const resultIcon = document.querySelector(".game__results-icon")
@@ -73,12 +76,13 @@ function handleStateChange() {
     }
 }
 
-function handleDifficultySelectButton(this: HTMLElement) {
-    if (this.dataset.difficulty)
-        window.localStorage.setItem(
-            "difficultySelected",
-            this.dataset.difficulty
-        )
+function handleDifficultySubmit() {
+    difficultyRadios.forEach((radio) => {
+        if (radio.checked) {
+            window.localStorage.setItem("difficultySelected", radio.value)
+            radio.checked = false
+        }
+    })
     window.localStorage.setItem("currentScreen", "game")
     handleStateChange()
 }
@@ -296,9 +300,7 @@ function main() {
         })
     })
 
-    difficultyButtons.forEach((button) => {
-        button.addEventListener("click", handleDifficultySelectButton)
-    })
+    difficultySubmitButton?.addEventListener("click", handleDifficultySubmit)
 }
 
 main()
