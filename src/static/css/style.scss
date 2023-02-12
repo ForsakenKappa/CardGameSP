@@ -106,7 +106,7 @@ body {
         display: inline-block;
         position: relative;
 
-        .label__text {
+        .label-text {
             position: absolute;
             color: #0080c1;
             font-family: StratosSkyeng, sans-serif;
@@ -119,9 +119,7 @@ body {
             z-index: 1;
             transition: background-color 200ms, transform 200ms;
             cursor: pointer;
-            
         }
-
     }
 
     &__radio {
@@ -134,12 +132,11 @@ body {
         cursor: pointer;
 
         &:checked,
-        &:checked + .label__text {
+        &:checked + .label-text {
             transform: scale(0.85);
             background-color: #dfdfdf;
         }
     }
-
 }
 
 .card {
