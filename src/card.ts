@@ -1,6 +1,6 @@
 export class Card {
-    suit?: string
-    rank?: string
+    suit: string
+    rank: string
     isDisclosed: boolean
 
     constructor(suit?: string, rank?: string, isDisclosed = true) {
