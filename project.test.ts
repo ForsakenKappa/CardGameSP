@@ -94,4 +94,11 @@ describe("Storage class", () => {
 
         expect(storage.cards).toEqual([card1, card2, card3, card4])
     })
+
+    it("should return null when there no cards to retrive", () => {
+        const storage = new Storage()
+        storage.clearCards()
+
+        expect(storage.retriveCards()).toBeNull()
+    })
 })
