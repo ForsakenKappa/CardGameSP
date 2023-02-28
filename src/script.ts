@@ -1,10 +1,8 @@
 import { Card } from "./card"
+import { Storage } from "./storage"
 
 // Global Parameters
-window.localStorage.setItem("currentScreen", "difficulty")
 window.localStorage.setItem("difficultySelected", "3")
-window.localStorage.setItem("timeSpent", "")
-window.localStorage.setItem("cards", "")
 
 const restartButtons = document.querySelectorAll(".game__restart")
 const screenButtons = document.querySelectorAll(".footer__screen-button")
@@ -19,40 +17,44 @@ const resultIcon = document.querySelector(".game__results-icon")
 const resultText = document.querySelector(".game__results-header")
 
 const INTRO_DELAY = 4000
+const STORAGE = new Storage()
 
 const pair: Array<HTMLElement> = []
 
-let currentScreen: string
 let currentScreenDOM: HTMLElement
 let isCardShown: boolean
 let openCardAmount: number
 let cardAmount: number
 let isGameWon: boolean
-let timerCount = 0
+let timerCount: number
 let timerID: NodeJS.Timer
+let difficultySelected: string
 
 function handleStateChange() {
     clearInterval(timerID)
     let isOverlay = false
 
     // Before currentScreen change
-    if (window.localStorage.getItem("currentScreen") === "game") {
-        secondsText.forEach((text) => (text.textContent = "00"))
-        minutesText.forEach((text) => (text.textContent = "00"))
-        timerCount = 0
+    if (STORAGE.currentScreen === "game") {
+        const minutes = STORAGE.timeSpent.slice(0, 2)
+        const seconds = STORAGE.timeSpent.slice(2, 4)
+        secondsText.forEach((text) => (text.textContent = seconds))
+        minutesText.forEach((text) => (text.textContent = minutes))
+        timerCount = Number(minutes) * 60 + Number(seconds)
+
         openCardAmount = 0
         isCardShown = false
         initGameScreen()
     }
 
-    if (window.localStorage.getItem("currentScreen") === "difficulty") {
+    if (STORAGE.currentScreen === "difficulty") {
         if (gameScreen) gameScreen.textContent = ""
         if (currentScreenDOM.className.includes("overlay"))
             document.querySelector(".game")?.classList.toggle("hidden")
     }
 
     if (
-        window.localStorage.getItem("currentScreen") === "game__results" &&
+        STORAGE.currentScreen === "game__results" &&
         currentScreenDOM.className.includes("game")
     ) {
         isOverlay = true
@@ -60,9 +62,8 @@ function handleStateChange() {
 
     // currentScreen changing
     if (!isOverlay) currentScreenDOM.classList.toggle("hidden")
-    currentScreen = window.localStorage.getItem("currentScreen") as string
     currentScreenDOM = document.querySelector(
-        `.${currentScreen}`
+        `.${STORAGE.currentScreen}`
     ) as HTMLElement
     currentScreenDOM.classList.toggle("hidden")
 
@@ -79,7 +80,7 @@ function handleStateChange() {
 function handleDifficultySubmit() {
     difficultyRadios.forEach((radio) => {
         if (radio.checked) {
-            window.localStorage.setItem("difficultySelected", radio.value)
+            difficultySelected = radio.value
             radio.checked = false
         }
     })
@@ -92,9 +93,6 @@ function initGameScreen() {
     gameScreen.removeEventListener("click", handleScreenClick)
     gameScreen.addEventListener("click", handleScreenClick)
 
-    const difficultySelected = window.localStorage.getItem("difficultySelected")
-    let cardsToDuplicate = []
-
     switch (difficultySelected) {
         case "1":
             cardAmount = 6
@@ -106,8 +104,11 @@ function initGameScreen() {
             cardAmount = 18
             break
         default:
+            cardAmount = STORAGE.getCardAmount()
             break
     }
+
+    addCardsToGameScreen()
 
     // Making grid more "square"
     let rectangleHeight: number
@@ -121,34 +122,6 @@ function initGameScreen() {
     ;(<HTMLElement>(
         gameScreen
     )).style.gridTemplateRows = `repeat(${rectangleHeight}, 133px)`
-
-    //Adding cards
-    for (let i = 0; i < cardAmount / 2; i++) {
-        const card = new Card(undefined, undefined, isCardShown)
-        cardsToDuplicate.push({
-            suit: card.suit,
-            rank: card.rank,
-        })
-        gameScreen.appendChild(card.card)
-    }
-
-    //Shuffle dupplicates
-    cardsToDuplicate = cardsToDuplicate
-        .map((value) => ({ value, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
-        .map(({ value }) => value)
-
-    //Adding duplicates
-    for (let i = 0; i < cardAmount / 2; i++) {
-        const cardParameters = cardsToDuplicate.pop()
-        if (!cardParameters) return
-        const card = new Card(
-            cardParameters.suit,
-            cardParameters.rank,
-            isCardShown
-        )
-        gameScreen.appendChild(card.card)
-    }
 
     //Flashing cards
     if (!isCardShown) {
@@ -256,26 +229,71 @@ function animateCard(cardElement: HTMLElement): void {
 function updateTimer(): void {
     timerCount++
     const seconds = timerCount % 60
+    const secondsString = seconds < 10 ? `0${seconds}` : String(seconds)
     const minutes = Math.floor(timerCount / 60)
+    const minutesString = minutes < 10 ? `0${minutes}` : String(minutes)
+    const timeSpentString = minutesString + secondsString
 
-    secondsText.forEach((text) => {
-        text.textContent = seconds < 10 ? `0${seconds}` : String(seconds)
-    })
+    secondsText.forEach((text) => (text.textContent = secondsString))
+    minutesText.forEach((text) => (text.textContent = minutesString))
 
-    minutesText.forEach((text) => {
-        text.textContent = minutes < 10 ? `0${minutes}` : String(minutes)
-    })
+    STORAGE.timeSpent = timeSpentString
+}
+
+function addCardsToGameScreen(): void {
+    if (!gameScreen) return
+    let cardsToDuplicate = []
+
+    const cards = STORAGE.retriveCards()
+    if (!cards) {
+        //Adding cards
+        for (let i = 0; i < cardAmount / 2; i++) {
+            const card = new Card(undefined, undefined, isCardShown)
+            cardsToDuplicate.push({
+                suit: card.suit,
+                rank: card.rank,
+            })
+            STORAGE.addCard(card)
+            gameScreen.appendChild(card.card)
+        }
+
+        //Shuffle dupplicates
+        cardsToDuplicate = cardsToDuplicate
+            .map((value) => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ value }) => value)
+
+        //Adding duplicates
+        for (let i = 0; i < cardAmount / 2; i++) {
+            const cardParameters = cardsToDuplicate.pop()
+            if (!cardParameters) return
+            const card = new Card(
+                cardParameters.suit,
+                cardParameters.rank,
+                isCardShown
+            )
+            STORAGE.addCard(card)
+            gameScreen.appendChild(card.card)
+        }
+
+        STORAGE.storeCards()
+    } else {
+        cards.forEach((card) => {
+            gameScreen.appendChild(card.card)
+        })
+    }
 }
 
 function main() {
-    currentScreen = window.localStorage.getItem("currentScreen") as string
     currentScreenDOM = document.querySelector(
-        `.${currentScreen}`
+        `.${STORAGE.currentScreen}`
     ) as HTMLElement
 
     restartButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            window.localStorage.setItem("currentScreen", "difficulty")
+            STORAGE.timeSpent = "0000"
+            STORAGE.currentScreen = "difficulty"
+            STORAGE.clearCards()
             handleStateChange()
         })
     })
@@ -301,6 +319,13 @@ function main() {
     })
 
     difficultySubmitButton?.addEventListener("click", handleDifficultySubmit)
+
+    // Difficulty is initial screen
+    if (STORAGE.currentScreen !== "difficulty") {
+        currentScreenDOM.classList.toggle("hidden")
+        document.querySelector(".difficulty")?.classList.toggle("hidden")
+        handleStateChange()
+    }
 }
 
 main()

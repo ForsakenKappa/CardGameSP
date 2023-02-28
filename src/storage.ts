@@ -4,12 +4,33 @@ export class Storage {
     difficulty: string
     cardsString: string
     cards: Array<Card>
+    cardRegExp = /\b[hptc]([6-9]|[QKJAX])[0-1]\b/g
 
     constructor() {
         this.difficulty =
             window.localStorage.getItem("difficultySelected") || "3"
         this.cardsString = window.localStorage.getItem("cards") || ""
         this.cards = []
+    }
+
+    set timeSpent(value: string) {
+        window.localStorage.setItem("timeSpent", value)
+    }
+
+    get timeSpent(): string {
+        return window.localStorage.getItem("timeSpent") || "0000"
+    }
+
+    set currentScreen(value: string) {
+        window.localStorage.setItem("currentScreen", value)
+    }
+
+    get currentScreen(): string {
+        return window.localStorage.getItem("currentScreen") || "difficulty"
+    }
+
+    resetCurrentScreen() {
+        this.currentScreen = "difficulty"
     }
 
     addCard(card: Card) {
@@ -34,11 +55,16 @@ export class Storage {
         window.localStorage.setItem("cards", this.cardsString)
     }
 
+    getCardAmount(): number {
+        this.cardsString = window.localStorage.getItem("cards") as string
+        const regExpMatches = this.cardsString.match(this.cardRegExp)
+        return regExpMatches?.length || 0
+    }
+
     retriveCards() {
         this.cardsString = window.localStorage.getItem("cards") as string
         if (this.cardsString) {
-            const regExp = /\b[hptc]([6-9]|[QKJAX])[0-1]\b/g
-            const regExpMatches = this.cardsString.match(regExp)
+            const regExpMatches = this.cardsString.match(this.cardRegExp)
 
             if (!regExpMatches) {
                 throw new Error("No string cards found")
@@ -70,6 +96,9 @@ export class Storage {
 
                 this.addCard(new Card(suit, rank, isDisclosed))
             }
+            return this.cards
+        } else {
+            return null
         }
     }
 }
