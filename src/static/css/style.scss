@@ -101,6 +101,42 @@ body {
         font-size: 64px;
         line-height: 72px;
     }
+
+    &__label {
+        display: inline-block;
+        position: relative;
+
+        .label-text {
+            position: absolute;
+            color: #0080c1;
+            font-family: StratosSkyeng, sans-serif;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 64px;
+            line-height: 72px;
+            top: 13px;
+            left: 29px;
+            z-index: 1;
+            transition: background-color 200ms, transform 200ms;
+            cursor: pointer;
+        }
+    }
+
+    &__radio {
+        width: 96px;
+        height: 98px;
+        appearance: none;
+        border-radius: 12px;
+        background-color: #fff;
+        transition: transform 200ms, background-color 200ms;
+        cursor: pointer;
+
+        &:checked,
+        &:checked + .label-text {
+            transform: scale(0.85);
+            background-color: #dfdfdf;
+        }
+    }
 }
 
 .card {

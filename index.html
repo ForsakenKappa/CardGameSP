@@ -11,31 +11,20 @@
         <section class="main">
             <div class="difficulty">
                 <h1 class="difficulty__header">Выберите сложность</h1>
-                <ul class="difficulty__settings">
-                    <li class="difficulty__option">
-                        <button
-                            class="difficulty__button button"
-                            data-difficulty="1"
-                        >
-                            1
-                        </button>
-                    </li>
-                    <li class="difficulty__option">
-                        <button
-                            class="difficulty__button button"
-                            data-difficulty="2"
-                        >
-                            2
-                        </button>
-                    </li>
-                    <li class="difficulty__option">
-                        <button
-                            class="difficulty__button button"
-                            data-difficulty="3"
-                        >
-                            3
-                        </button>
-                    </li>
+                <div class="difficulty__settings">
+                    <label for="difficultyChoice1" class="difficulty__label">
+                        <input type="radio" class="difficulty__radio" name="difficulty" id="difficultyChoice1" value="1">
+                        <p class="label-text">1</p>
+                    </label>
+                    <label for="difficultyChoice2" class="difficulty__label">
+                        <input type="radio" class="difficulty__radio" name="difficulty" id="difficultyChoice2" value="2">
+                        <p class="label-text">2</p>
+                    </label>
+                    <label for="difficultyChoice3" class="difficulty__label">
+                        <input type="radio" class="difficulty__radio" name="difficulty" id="difficultyChoice3" value="3">
+                        <p class="label-text">3</p>
+                    </label>
+                </div>
                 </ul>
                 <button class="difficulty__submit button">Старт</button>
             </div>
